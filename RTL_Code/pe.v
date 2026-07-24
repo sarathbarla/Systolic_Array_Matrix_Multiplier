@@ -25,7 +25,7 @@ module pe (
 
             // Pass B to the bottom neighbour
             b_out <= b_in;
-            
+
             // This is the MAC operation: acc = acc + (A * B)
             acc   <= acc + (a_in * b_in);
         end

@@ -38,6 +38,8 @@ module systolic_array_3x3 (
     // Internal wires to connect PEs together
     wire [7:0] a_wire [0:2][0:3];  
     wire [7:0] b_wire [0:3][0:2];  
+    // Internal accumulator wires for the generate block
+    wire [31:0] c_out [0:2][0:2];
 
     assign a_wire[0][0] = a_row0;
     assign a_wire[1][0] = a_row1;
@@ -63,9 +65,6 @@ module systolic_array_3x3 (
             end
         end
     endgenerate
-
-    // Internal accumulator wires for the generate block
-    wire [31:0] c_out [0:2][0:2];
 
     // Mapping internal results to output ports
     assign c00 = c_out[0][0];  assign c01 = c_out[0][1];  assign c02 = c_out[0][2];
