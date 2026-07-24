@@ -1,4 +1,3 @@
-// ============================================================
 // Testbench : tb_systolic_array
 // Description : Feeds two 3x3 matrices into the systolic array
 //               and checks the output against expected results.
@@ -18,15 +17,12 @@
 //   C[2][0] = 7*7 + 8*6 + 9*3 = 49+48+27 = 124
 //   C[2][1] = 7*8 + 8*5 + 9*2 = 56+40+18 = 114
 //   C[2][2] = 7*9 + 8*4 + 9*1 = 63+32+9  = 104
-// ============================================================
+
 
 `timescale 1ns/1ps
 
 module tb_systolic_array;
 
-    // -------------------------------------------------------
-    // DUT (Device Under Test) signal declarations
-    // -------------------------------------------------------
     reg        clk;
     reg        rst_n;
 
@@ -37,9 +33,6 @@ module tb_systolic_array;
     wire [31:0] c10, c11, c12;
     wire [31:0] c20, c21, c22;
 
-    // -------------------------------------------------------
-    // Instantiate the DUT
-    // -------------------------------------------------------
     systolic_array_3x3 dut (
         .clk    (clk),
         .rst_n  (rst_n),
@@ -50,39 +43,9 @@ module tb_systolic_array;
         .c20(c20), .c21(c21), .c22(c22)
     );
 
-    // -------------------------------------------------------
-    // Clock generation: 10ns period
-    // -------------------------------------------------------
     initial clk = 0;
-    always #5 clk = ~clk;   // Toggle every 5ns => 10ns period
+    always #5 clk = ~clk; 
 
-    // -------------------------------------------------------
-    // Matrix A values (rows fed left to right, element by element)
-    // A = | 1 2 3 |
-    //     | 4 5 6 |
-    //     | 7 8 9 |
-    //
-    // Matrix B values (columns fed top to bottom, element by element)
-    // B = | 7 8 9 |
-    //     | 6 5 4 |
-    //     | 3 2 1 |
-    //
-    // KEY CONCEPT - SKEWING:
-    // Cycle 0: Feed A[0][0], B[0][0] to PE[0][0] — first elements meet here
-    // Cycle 1: Feed A[0][1], B[1][0] to PE[0][0] — second elements meet here
-    //          Feed A[1][0], B[0][1] to PE[1][0] and PE[0][1] — delayed start
-    // And so on...
-    //
-    // To implement skewing: row1 starts 1 cycle after row0,
-    //                       row2 starts 2 cycles after row0
-    //                       (same for columns)
-    // We do this by feeding 0s initially then the real values
-    // -------------------------------------------------------
-
-    // A matrix rows (each row is 3 elements, fed one per cycle)
-    // Row 0: 1, 2, 3
-    // Row 1: 4, 5, 6  (skewed: starts 1 cycle late)
-    // Row 2: 7, 8, 9  (skewed: starts 2 cycles late)
     reg [7:0] A [0:2][0:2];
     reg [7:0] B [0:2][0:2];
 
@@ -106,28 +69,15 @@ module tb_systolic_array;
         @(posedge clk); #1;  // Wait one clock then release reset
         rst_n = 1;
 
-        // ---------------------------------------------------
-        // Feed data with skewing over 5 cycles
-        // Cycle 0: row0[0], col0[0]         (only first PE gets real data)
-        // Cycle 1: row0[1], row1[0]         (row1 starts, col skewing same)
-        // Cycle 2: row0[2], row1[1], row2[0] (all rows active)
-        // Cycle 3: row1[2], row2[1]
-        // Cycle 4: row2[2]
-        // After 5 cycles of feeding + propagation delay, results are valid
-        // ---------------------------------------------------
-
         for (cycle = 0; cycle < 7; cycle = cycle + 1) begin
             @(posedge clk); #1;
-
+            
             // Feed A rows with skewing
-            // Row 0: elements at index 'cycle' (valid for cycle 0,1,2)
             a_row0 = (cycle < 3) ? A[0][cycle]     : 8'd0;
-            // Row 1: skewed by 1, so reads A[1][cycle-1] (valid for cycle 1,2,3)
             a_row1 = (cycle >= 1 && cycle < 4) ? A[1][cycle-1] : 8'd0;
-            // Row 2: skewed by 2, so reads A[2][cycle-2] (valid for cycle 2,3,4)
             a_row2 = (cycle >= 2 && cycle < 5) ? A[2][cycle-2] : 8'd0;
 
-            // Feed B columns with skewing (same logic, applied to columns)
+            // Feed B columns with skewing 
             b_col0 = (cycle < 3) ? B[cycle][0]     : 8'd0;
             b_col1 = (cycle >= 1 && cycle < 4) ? B[cycle-1][1] : 8'd0;
             b_col2 = (cycle >= 2 && cycle < 5) ? B[cycle-2][2] : 8'd0;
@@ -136,9 +86,8 @@ module tb_systolic_array;
         // Wait a few more cycles for accumulation to complete
         repeat(5) @(posedge clk);
 
-        // ---------------------------------------------------
         // Display and verify results
-        // ---------------------------------------------------
+        
         $display("======================================");
         $display("  Systolic Array 3x3 Results");
         $display("======================================");
@@ -163,8 +112,7 @@ module tb_systolic_array;
 
         $finish;
     end
-
-    // Optional: dump waveform for GTKWave
+    
     initial begin
         $dumpfile("systolic_array.vcd");
         $dumpvars(0, tb_systolic_array);

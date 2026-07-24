@@ -1,10 +1,8 @@
-// ============================================================
 // Module : pe (Processing Element)
 // Description : Single cell of the systolic array.
 //               Each PE does ONE multiply-accumulate (MAC).
 //               Data flows: A passes RIGHT, B passes DOWN,
 //               and the partial sum accumulates inside.
-// ============================================================
 
 module pe (
     input  wire        clk,       // Clock
@@ -16,15 +14,8 @@ module pe (
     output reg  [31:0] acc        // Accumulated result (partial sum)
 );
 
-    // -----------------------------------------------------------
-    // On every clock edge:
-    //   1. Pass A to the right  (a_out <= a_in)
-    //   2. Pass B downward      (b_out <= b_in)
-    //   3. Multiply A and B, add to accumulator
-    // -----------------------------------------------------------
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            // Reset: clear all outputs and accumulator
             a_out <= 8'd0;
             b_out <= 8'd0;
             acc   <= 32'd0;
@@ -34,8 +25,7 @@ module pe (
 
             // Pass B to the bottom neighbour
             b_out <= b_in;
-
-            // Multiply current A and B, add to running sum
+            
             // This is the MAC operation: acc = acc + (A * B)
             acc   <= acc + (a_in * b_in);
         end

@@ -1,4 +1,3 @@
-// ============================================================
 // Module : systolic_array_3x3
 // Description : 3x3 systolic array to multiply two 3x3 matrices
 //               A (3x3) * B (3x3) = C (3x3)
@@ -15,18 +14,17 @@
 //   PE[0][0] needs A[0][0]*B[0][0] at cycle 0
 //   PE[0][1] needs A[0][0]*B[0][1] but B[0][1] arrives one cycle later
 //   So we delay (skew) the inputs so the RIGHT data meets at the RIGHT PE
-// ============================================================
 
 module systolic_array_3x3 (
     input  wire        clk,
     input  wire        rst_n,
 
-    // Row inputs for Matrix A (fed from left, skewed by row index)
+    // Row inputs for Matrix A 
     input  wire [7:0]  a_row0,    // A row 0 input (no delay)
     input  wire [7:0]  a_row1,    // A row 1 input (1 cycle delayed externally)
     input  wire [7:0]  a_row2,    // A row 2 input (2 cycles delayed externally)
 
-    // Column inputs for Matrix B (fed from top, skewed by col index)
+    // Column inputs for Matrix B 
     input  wire [7:0]  b_col0,    // B col 0 input (no delay)
     input  wire [7:0]  b_col1,    // B col 1 input (1 cycle delayed externally)
     input  wire [7:0]  b_col2,    // B col 2 input (2 cycles delayed externally)
@@ -37,37 +35,18 @@ module systolic_array_3x3 (
     output wire [31:0] c20, c21, c22
 );
 
-    // -----------------------------------------------------------
     // Internal wires to connect PEs together
-    // a_wire[i][j] = A data going from PE[i][j] to PE[i][j+1]
-    // b_wire[i][j] = B data going from PE[i][j] to PE[i+1][j]
-    // -----------------------------------------------------------
+    wire [7:0] a_wire [0:2][0:3];  
+    wire [7:0] b_wire [0:3][0:2];  
 
-    // A wires: horizontal connections (left to right)
-    // a_wire[row][col] means: wire entering column 'col' of row 'row'
-    wire [7:0] a_wire [0:2][0:3];  // col 0..3 (col3 = output, unused)
-
-    // B wires: vertical connections (top to bottom)
-    wire [7:0] b_wire [0:3][0:2];  // row 0..3 (row3 = output, unused)
-
-    // -----------------------------------------------------------
-    // Connect row inputs to leftmost column (col 0) of each row
-    // -----------------------------------------------------------
     assign a_wire[0][0] = a_row0;
     assign a_wire[1][0] = a_row1;
     assign a_wire[2][0] = a_row2;
 
-    // -----------------------------------------------------------
-    // Connect column inputs to topmost row (row 0) of each column
-    // -----------------------------------------------------------
     assign b_wire[0][0] = b_col0;
     assign b_wire[0][1] = b_col1;
     assign b_wire[0][2] = b_col2;
 
-    // -----------------------------------------------------------
-    // Instantiate 3x3 = 9 Processing Elements
-    // pe_inst[row][col]
-    // -----------------------------------------------------------
     genvar i, j;
     generate
         for (i = 0; i < 3; i = i + 1) begin : row_gen
@@ -85,14 +64,10 @@ module systolic_array_3x3 (
         end
     endgenerate
 
-    // -----------------------------------------------------------
     // Internal accumulator wires for the generate block
-    // -----------------------------------------------------------
     wire [31:0] c_out [0:2][0:2];
 
-    // -----------------------------------------------------------
-    // Map internal results to output ports
-    // -----------------------------------------------------------
+    // Mapping internal results to output ports
     assign c00 = c_out[0][0];  assign c01 = c_out[0][1];  assign c02 = c_out[0][2];
     assign c10 = c_out[1][0];  assign c11 = c_out[1][1];  assign c12 = c_out[1][2];
     assign c20 = c_out[2][0];  assign c21 = c_out[2][1];  assign c22 = c_out[2][2];
