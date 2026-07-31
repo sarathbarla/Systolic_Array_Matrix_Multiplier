@@ -1,33 +1,20 @@
 // Module : systolic_array_3x3
 // Description : 3x3 systolic array to multiply two 3x3 matrices
 //               A (3x3) * B (3x3) = C (3x3)
-//
-// HOW DATA FLOWS (this is the key concept):
-//   - Matrix A rows are fed from the LEFT, one element per cycle
-//     Row 0 starts at cycle 0, Row 1 starts at cycle 1 (skewed)
-//   - Matrix B columns are fed from the TOP, one element per cycle
-//     Col 0 starts at cycle 0, Col 1 starts at cycle 1 (skewed)
-//   - Each PE accumulates partial products over time
-//   - After N cycles (N=3 here), each PE holds C[row][col]
-//
-// WHY SKEWED INPUT?
-//   PE[0][0] needs A[0][0]*B[0][0] at cycle 0
-//   PE[0][1] needs A[0][0]*B[0][1] but B[0][1] arrives one cycle later
-//   So we delay (skew) the inputs so the RIGHT data meets at the RIGHT PE
 
 module systolic_array_3x3 (
     input  wire        clk,
     input  wire        rst_n,
 
     // Row inputs for Matrix A 
-    input  wire [7:0]  a_row0,    // A row 0 input (no delay)
-    input  wire [7:0]  a_row1,    // A row 1 input (1 cycle delayed externally)
-    input  wire [7:0]  a_row2,    // A row 2 input (2 cycles delayed externally)
+    input  wire [7:0]  a_row0,    
+    input  wire [7:0]  a_row1,
+    input  wire [7:0]  a_row2,    
 
     // Column inputs for Matrix B 
-    input  wire [7:0]  b_col0,    // B col 0 input (no delay)
-    input  wire [7:0]  b_col1,    // B col 1 input (1 cycle delayed externally)
-    input  wire [7:0]  b_col2,    // B col 2 input (2 cycles delayed externally)
+    input  wire [7:0]  b_col0,    
+    input  wire [7:0]  b_col1,    
+    input  wire [7:0]  b_col2,   
 
     // Output: 9 accumulated results = C matrix elements
     output wire [31:0] c00, c01, c02,
