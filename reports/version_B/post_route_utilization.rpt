@@ -1,0 +1,39 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.2 (win64) Build 6299465 Fri Nov 14 19:35:11 GMT 2025
+| Date         : Thu Nov 12 15:20:24 2026
+| Host         : SARATH running 64-bit major release  (build 9200)
+| Command      : report_utilization -file reports/version_B/post_route_utilization.rpt -hierarchical
+| Design       : systolic_array_3x3
+| Device       : xc7a200tsbg484-1
+| Speed File   : -1
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++---------------------------------+--------+------------+------------+---------+------+-----+--------+--------+------------+
+|             Instance            | Module | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++---------------------------------+--------+------------+------------+---------+------+-----+--------+--------+------------+
+| systolic_array_3x3              |  (top) |       1208 |       1208 |       0 |    0 | 390 |      0 |      0 |          0 |
+|   (systolic_array_3x3)          |  (top) |          6 |          6 |       0 |    0 |   6 |      0 |      0 |          0 |
+|   row_gen[0].col_gen[0].pe_inst |     pe |        298 |        298 |       0 |    0 |  48 |      0 |      0 |          0 |
+|   row_gen[0].col_gen[1].pe_inst |   pe_8 |        203 |        203 |       0 |    0 |  48 |      0 |      0 |          0 |
+|   row_gen[0].col_gen[2].pe_inst |   pe_9 |        127 |        127 |       0 |    0 |  40 |      0 |      0 |          0 |
+|   row_gen[1].col_gen[0].pe_inst |  pe_10 |        163 |        163 |       0 |    0 |  48 |      0 |      0 |          0 |
+|   row_gen[1].col_gen[1].pe_inst |  pe_11 |        136 |        136 |       0 |    0 |  48 |      0 |      0 |          0 |
+|   row_gen[1].col_gen[2].pe_inst |  pe_12 |        117 |        117 |       0 |    0 |  40 |      0 |      0 |          0 |
+|   row_gen[2].col_gen[0].pe_inst |  pe_13 |         85 |         85 |       0 |    0 |  40 |      0 |      0 |          0 |
+|   row_gen[2].col_gen[1].pe_inst |  pe_14 |         74 |         74 |       0 |    0 |  40 |      0 |      0 |          0 |
+|   row_gen[2].col_gen[2].pe_inst |  pe_15 |         56 |         56 |       0 |    0 |  32 |      0 |      0 |          0 |
++---------------------------------+--------+------------+------------+---------+------+-----+--------+--------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining
+
+

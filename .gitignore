@@ -1,37 +1,32 @@
-
----
-
-# .gitignore
-
-Create `.gitignore` in root folder:
-
-```gitignore
-# Simulation files
+# Simulation Artifacts
 *.vcd
 *.vvp
 *.out
+sim.out
 systolic_sim
+systolic_array.vcd
 
-# Vivado generated files
-*.xpr
+# Vivado Logs & Journals
 *.jou
 *.log
 *.str
+clockInfo.txt
+dfx_runtime.txt
 
+# Vivado Project & Cache
+*.xpr
+.Xil/
 .cache/
 .hw/
 .ip_user_files/
 .runs/
 .sim/
+build_vivado/
 
-# VS Code
+# Editor & OS Artifacts
 .vscode/
-
-# Temporary files
 *.bak
 *.swp
 *~
-
-# OS files
 Thumbs.db
 desktop.ini
